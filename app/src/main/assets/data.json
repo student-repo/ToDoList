@@ -1,0 +1,9 @@
+{
+  "data": "fifififiifi",
+  "images":[{"id": 1, "name": "nature1"}, {"id": 2, "name": "nature2"}, {"id": 3, "name": "nature4"},
+            {"id": 4, "name": "nature4"}, {"id": 5, "name": "nature5"}],
+  "images2":{
+    "1": {"id": 1, "name": "nature1"}, "2": {"id": 2, "name": "nature2"}, "3": {"id": 3, "name": "nature4"},
+    "4": {"id": 4, "name": "nature4"}, "5": {"id": 5, "name": "nature5"}
+  }
+}
