@@ -9,7 +9,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -62,6 +64,18 @@ public class MainActivity extends AppCompatActivity implements ImagesListFragmen
         commitFragment();
     }
 
+    @Override
+    public void fpp(String s) {
+        TextView tt = (TextView)findViewById(R.id.landscape_image_title);
+        tt.setText(s);
+
+        ImageView iv = (ImageView)findViewById(R.id.landscape_image);
+        iv.setImageResource(R.drawable.nature_big);
+
+        RatingBar rb = (RatingBar)findViewById(R.id.landscape_rating_bar);
+        rb.setVisibility(View.VISIBLE);
+    }
+
     private void commitFragment(){
         FragmentManager fm = getFragmentManager();
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
@@ -69,34 +83,37 @@ public class MainActivity extends AppCompatActivity implements ImagesListFragmen
         int displaymode = getResources().getConfiguration().orientation;
         if (displaymode == 1) { // it portrait mode
             portraitFragment = new ImagesListFragment();
-            Bundle b = new Bundle();
-            b.putStringArray("titleArray", getTitleArray());
-            b.putStringArray("descriptionArray", getDescriptionArray());
-            b.putIntArray("progressArray", getProgressArray());
-            b.putStringArray("imageArray", getImageArray());
-            b.putIntArray("idArray", getIdArray());
 
-            portraitFragment.setArguments(b);
+
+            portraitFragment.setArguments(getBundle());
             fragmentTransaction.replace(android.R.id.content, portraitFragment);
         }
-//        else {// its landscape
+        else {// its landscape
 //            Fragment2 f2 = new Fragment2();
 //            fragmentTransaction.replace(android.R.id.content, f2);
-        portraitFragment = new ImagesListFragment();
+
+
+//            portraitFragment = new ImagesListFragment();
+            LandscapeFragment f = new LandscapeFragment();
+
+//        portraitFragment.setArguments(getBundle());
+            f.setArguments(getBundle());
+            fragmentTransaction.replace(android.R.id.content, f);
+//            fragmentTransaction.replace(android.R.id.content, f);
+        }
+        fragmentTransaction.commit();
+    }
+
+
+    private Bundle getBundle(){
         Bundle b = new Bundle();
         b.putStringArray("titleArray", getTitleArray());
         b.putStringArray("descriptionArray", getDescriptionArray());
         b.putIntArray("progressArray", getProgressArray());
         b.putStringArray("imageArray", getImageArray());
         b.putIntArray("idArray", getIdArray());
-
-        portraitFragment.setArguments(b);
-        fragmentTransaction.replace(android.R.id.content, portraitFragment);
-//        }
-        fragmentTransaction.commit();
+        return b;
     }
-
-
     private String[] getTitleArray(){
         ArrayList<String> s = new ArrayList<>();
         for(Integer i: imagesInfo.keySet()){

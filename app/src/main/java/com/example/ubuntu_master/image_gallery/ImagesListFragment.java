@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.HashMap;
@@ -20,6 +21,7 @@ public class ImagesListFragment extends Fragment {
 
     public interface updateImagesListFragment {
         void updateImagesListFragment(int id, int progress);
+        void fpp(String s);
     }
 
     updateImagesListFragment dataPasser;
@@ -32,6 +34,10 @@ public class ImagesListFragment extends Fragment {
 
     public void updateImagesListFragment(int id, int progress) {
         dataPasser.updateImagesListFragment(id, progress);
+    }
+
+    public void fpp(String s){
+        dataPasser.fpp(s);
     }
 
 
@@ -81,6 +87,11 @@ public class ImagesListFragment extends Fragment {
                     i.putExtra("imageProgress", String.valueOf(progressArray[position]));
                     i.putExtra("imageId", String.valueOf(idArray[position]));
                     startActivityForResult(i, 999);
+                }
+                else {
+//                    TextView tt = (TextView)view.findViewById(R.id.landscape_image_title);
+//                    tt.setText("adasdad");
+                    fpp(titleArray[position]);
                 }
 
             }

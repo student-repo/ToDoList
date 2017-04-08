@@ -32,8 +32,19 @@ public class CustomList extends ArrayAdapter<String> {
 
         TextView txtTitle = (TextView) rowView.findViewById(R.id.image_title);
         TextView des = (TextView) rowView.findViewById(R.id.image_description);
+        int displaymode = context.getResources().getConfiguration().orientation;
         RatingBar rr = (RatingBar)rowView.findViewById(R.id.rating_bar);
-        rr.setProgress(imagesInfo.get(position).getProgress() / 10);
+        if(displaymode == 1){
+            rr.setProgress(imagesInfo.get(position).getProgress() / 10);
+
+        }
+        else{
+            rr.setVisibility(View.GONE);
+        }
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//        RatingBar rr = (RatingBar)rowView.findViewById(R.id.rating_bar);
+//        rr.setProgress(imagesInfo.get(position).getProgress() / 10);
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
         des.setText(imagesInfo.get(position).getDescription());
