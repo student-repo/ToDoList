@@ -40,10 +40,6 @@ public class SingleImageActivity extends AppCompatActivity implements SingleImag
         Bundle imageInfo = getIntent().getExtras();
         this.imageInfo = new ImageInfo(imageInfo.getString("imageTitle"), imageInfo.getString("imageDescription"),
                 imageInfo.getString("imageName"), Integer.parseInt(imageInfo.getString("imageProgress")), Integer.parseInt(imageInfo.getString("imageId")));
-//        System.out.println("second activity: " + this.imageInfo.getTitle());
-//        System.out.println("second activity: " + this.imageInfo.getDescription());
-//        System.out.println("second activity: " + this.imageInfo.getImage());
-//        System.out.println("second activity: " + this.imageInfo.getProgress());
 
         getSupportActionBar().setTitle(this.imageInfo.getTitle());
 
@@ -59,26 +55,19 @@ public class SingleImageActivity extends AppCompatActivity implements SingleImag
             f1.setArguments(imageInfo);
             fragmentTransaction.replace(android.R.id.content, f1);
         }
-//        else {// its landscape
+        else {// its landscape
+            SingleImageFragment f1 = new SingleImageFragment();
+            f1.setArguments(imageInfo);
+            fragmentTransaction.replace(android.R.id.content, f1);
 //            Fragment2 f2 = new Fragment2();
 //            fragmentTransaction.replace(android.R.id.content, f2);
-//        }
+        }
         fragmentTransaction.commit();
     }
 
 
-//    @Override
-//    protected void onDestroy() {
-//        super.onDestroy();
-//        Intent i = new Intent(this, MainActivity.class);
-//        i.putExtra("ratingBarValue", "received foo data: " + data);
-//        i.putExtra("imageId", imageInfo.getId());
-////        startActivity(i);
-//    }
-
     @Override
     public void onDataPass(String data) {
-        System.out.println("On data pass!!!! : "  + data);
         this.data = data;
     }
 }

@@ -1,7 +1,7 @@
 package com.example.ubuntu_master.image_gallery;
 
+import android.app.Activity;
 import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,7 +11,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import static android.app.Activity.RESULT_OK;
@@ -19,38 +18,30 @@ import static android.app.Activity.RESULT_OK;
 
 public class ImagesListFragment extends Fragment {
 
-    private HashMap<Integer, ImageInfo> imagesInfo = new HashMap<Integer, ImageInfo>(){{
-       put(0, new ImageInfo("Google Plus1", "ala ma kota ale nie ma psa 11111 22222 333333 44444", "nature1", 30, 0));
-        put(1, new ImageInfo("Twitter1", "ala ma kota ale nie ma psa 11111 22222 333333 44444", "nature2", 30, 1));
-        put(2, new ImageInfo("Google Plus2", "ala ma kota ale nie ma psa 11111 22222 333333 44444", "nature3", 30, 2));
-        put(3, new ImageInfo("Twitter2", "ala ma kota ale nie ma psa 11111 22222 333333 44444", "nature4", 30, 3));
-        put(4, new ImageInfo("Google Plus3", "ala ma kota ale nie ma psa 11111 22222 333333 44444", "nature5", 30, 4));
-        put(5, new ImageInfo("Twitter3", "ala ma kota ale nie ma psa 11111 22222 333333 44444", "nature1", 30, 5));
-        put(6, new ImageInfo("Google Plus4", "ala ma kota ale nie ma psa 11111 22222 333333 44444", "nature2", 30, 6));
-        put(7, new ImageInfo("Twitter4", "ala ma kota ale nie ma psa 11111 22222 333333 44444", "nature3", 30, 7));
-        put(8, new ImageInfo("Google Plus5", "ala ma kota ale nie ma psa 11111 22222 333333 44444", "nature4", 30, 8));
-        put(9, new ImageInfo("Twitter5", "ala ma kota ale nie ma psa 11111 22222 333333 44444", "nature5", 30, 9));
-    }};
+    public interface updateImagesListFragment {
+        void updateImagesListFragment(int id, int progress);
+    }
+
+    updateImagesListFragment dataPasser;
+
+    @Override
+    public void onAttach(Activity a) {
+        super.onAttach(a);
+        dataPasser = (updateImagesListFragment) a;
+    }
+
+    public void updateImagesListFragment(int id, int progress) {
+        dataPasser.updateImagesListFragment(id, progress);
+    }
 
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode == 999 && resultCode == RESULT_OK){
-
             int id = Integer.parseInt(data.getStringExtra("imageId"));
             int progress = (int) (Float.parseFloat(data.getStringExtra("ratingBarValue")) * 10);
 
-
-            System.out.println("WORKS WORKS WORKS WORKS " + progress);
-            System.out.println("WORKS WORKS WORKS WORKS " + id);
-
-            ImageInfo ii = imagesInfo.get(id);
-
-            imagesInfo.put(id, new ImageInfo(ii.getTitle(), ii.getDescription(), ii.getImage(), progress, id));
-
-
-
-//            data.getStringExtra("message");
+            updateImagesListFragment(id, progress);
         }
     }
 
@@ -58,10 +49,16 @@ public class ImagesListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+        final String[] titleArray = getArguments().getStringArray("titleArray");
+        final String[] descriptionArray = getArguments().getStringArray("descriptionArray");
+        final int[] progressArray = getArguments().getIntArray("progressArray");
+        final int[] idArray = getArguments().getIntArray("idArray");
+        final String[] imageArray = getArguments().getStringArray("imageArray");
 
         View view = inflater.inflate(R.layout.fragment_images_list, container, false);
+
         CustomList adapter = new
-                CustomList(getActivity(), getTitleArray(), imagesInfo);
+                CustomList(getActivity(), titleArray, buildImagesInfoMap(titleArray, descriptionArray, progressArray, idArray, imageArray));
 
 
         ListView list = (ListView)view.findViewById(R.id.listview);
@@ -72,35 +69,31 @@ public class ImagesListFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-                Toast.makeText(getActivity(), "You Clicked at " + imagesInfo.get(position).getTitle(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "You Clicked at " + titleArray[position], Toast.LENGTH_SHORT).show();
 
-                Intent i = new Intent(getActivity(), SingleImageActivity.class);
-                i.putExtra("imageTitle", imagesInfo.get(position).getTitle());
-                i.putExtra("imageDescription", imagesInfo.get(position).getDescription());
-                i.putExtra("imageName", imagesInfo.get(position).getImage());
-                i.putExtra("imageProgress", String.valueOf(imagesInfo.get(position).getProgress()));
-                i.putExtra("imageId", String.valueOf(imagesInfo.get(position).getId()));
-//                startActivity(i);
-                startActivityForResult(i, 999);
+                int displaymode = getResources().getConfiguration().orientation;
+
+                if(displaymode == 1){ // it portrait mode
+                    Intent i = new Intent(getActivity(), SingleImageActivity.class);
+                    i.putExtra("imageTitle", titleArray[position]);
+                    i.putExtra("imageDescription", descriptionArray[position]);
+                    i.putExtra("imageName", imageArray[position]);
+                    i.putExtra("imageProgress", String.valueOf(progressArray[position]));
+                    i.putExtra("imageId", String.valueOf(idArray[position]));
+                    startActivityForResult(i, 999);
+                }
 
             }
         });
         return view;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-//        System.out.println("%%%%%%%%%%% " + getArguments().get("ratingBarValue"));
-        imagesInfo.put(3, new ImageInfo("Twitter2", "ala ma kota ale nie ma psa 11111 22222 333333 44444", "nature4", 50, 3));
-    }
-
-    private String[] getTitleArray(){
-        ArrayList<String> s = new ArrayList<>();
-        for(Integer i: imagesInfo.keySet()){
-            s.add(imagesInfo.get(i).getTitle());
+    private HashMap<Integer, ImageInfo> buildImagesInfoMap(String[] titleArray, String[] descriptionArray, int[] progressArray, int[] idArray, String[] imageArray){
+        HashMap<Integer, ImageInfo> h = new HashMap<>();
+        for(Integer i: idArray){
+            h.put(i, new ImageInfo(titleArray[i], descriptionArray[i], imageArray[i], progressArray[i], i));
         }
-        return s.toArray(new String[0]);
+        return h;
     }
 }
 

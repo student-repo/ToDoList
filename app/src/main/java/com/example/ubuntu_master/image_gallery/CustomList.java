@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -31,6 +32,8 @@ public class CustomList extends ArrayAdapter<String> {
 
         TextView txtTitle = (TextView) rowView.findViewById(R.id.image_title);
         TextView des = (TextView) rowView.findViewById(R.id.image_description);
+        RatingBar rr = (RatingBar)rowView.findViewById(R.id.rating_bar);
+        rr.setProgress(imagesInfo.get(position).getProgress() / 10);
 
 
         des.setText(imagesInfo.get(position).getDescription());

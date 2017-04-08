@@ -36,4 +36,7 @@ public class ImageInfo {
     public int getId() {
         return id;
     }
+    public void setProgress(int progress){
+        this.progress = progress;
+    }
 }

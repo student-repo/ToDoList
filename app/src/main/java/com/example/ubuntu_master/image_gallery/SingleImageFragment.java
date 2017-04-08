@@ -1,16 +1,11 @@
 package com.example.ubuntu_master.image_gallery;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.app.Fragment;
-import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
@@ -18,7 +13,7 @@ import android.widget.TextView;
 public class SingleImageFragment extends Fragment {
 
     public interface OnDataPass {
-        public void onDataPass(String data);
+        void onDataPass(String data);
     }
 
     OnDataPass dataPasser;
@@ -52,7 +47,7 @@ public class SingleImageFragment extends Fragment {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
 
-                String rateValue = String.valueOf(ratingBar.getRating());
+                String rateValue = String.valueOf(ratingBar.getRating() * 2); // * 2 becouse values are weird (depend if we get from xml or not)
                 System.out.println("Rate for Module is"+rateValue);
                 passData(rateValue);
             }
