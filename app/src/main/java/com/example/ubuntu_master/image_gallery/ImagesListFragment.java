@@ -10,8 +10,25 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import org.json.JSONObject;
+
+import java.util.HashMap;
+
 
 public class ImagesListFragment extends Fragment {
+
+    private HashMap<Integer, ImageInfo> imagesInfo = new HashMap<Integer, ImageInfo>(){{
+       put(1, new ImageInfo("Google Plus", "ala ma kota ale nie ma psa 11111 22222 333333 44444", "nature1", 30));
+        put(1, new ImageInfo("Twitter", "ala ma kota ale nie ma psa 11111 22222 333333 44444", "nature2", 30));
+        put(1, new ImageInfo("Google Plus", "ala ma kota ale nie ma psa 11111 22222 333333 44444", "nature3", 30));
+        put(1, new ImageInfo("Twitter", "ala ma kota ale nie ma psa 11111 22222 333333 44444", "nature4", 30));
+        put(1, new ImageInfo("Google Plus", "ala ma kota ale nie ma psa 11111 22222 333333 44444", "nature5", 30));
+        put(1, new ImageInfo("Twitter", "ala ma kota ale nie ma psa 11111 22222 333333 44444", "nature1", 30));
+        put(1, new ImageInfo("Google Plus", "ala ma kota ale nie ma psa 11111 22222 333333 44444", "nature2", 30));
+        put(1, new ImageInfo("Twitter", "ala ma kota ale nie ma psa 11111 22222 333333 44444", "nature3", 30));
+        put(1, new ImageInfo("Google Plus", "ala ma kota ale nie ma psa 11111 22222 333333 44444", "nature4", 30));
+        put(1, new ImageInfo("Twitter", "ala ma kota ale nie ma psa 11111 22222 333333 44444", "nature5", 30));
+    }};
 
     private String[] web = {
             "Google Plus",
@@ -42,6 +59,7 @@ public class ImagesListFragment extends Fragment {
 
 
     };
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

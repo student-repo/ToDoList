@@ -17,6 +17,8 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -82,6 +84,8 @@ public class MainActivity extends AppCompatActivity {
             JSONObject obj = new JSONObject(loadJSONFromAsset());
             JSONObject oo = (JSONObject)obj.getJSONObject("images2").get("2");
             System.out.println(oo.get("name"));
+            HashMap<String, JSONObject> h = new HashMap<>();
+            System.out.println(oo.keys().getClass());
 
 //            HashMap<String,Object> result =
 //                    new ObjectMapper().readValue(loadJSONFromAsset(), HashMap.class);
