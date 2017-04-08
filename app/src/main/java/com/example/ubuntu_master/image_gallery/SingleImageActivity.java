@@ -21,6 +21,15 @@ public class SingleImageActivity extends AppCompatActivity implements SingleImag
     private String data = "";
 
     @Override
+    public void onBackPressed() {
+        Intent i = new Intent();
+        i.putExtra("ratingBarValue", data);
+        i.putExtra("imageId", String.valueOf(imageInfo.getId()));
+        setResult(RESULT_OK, i);
+        finish();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_single_image);
@@ -58,14 +67,14 @@ public class SingleImageActivity extends AppCompatActivity implements SingleImag
     }
 
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Intent i = new Intent(this, MainActivity.class);
-        i.putExtra("ratingBarValue", "received foo data: " + data);
-        i.putExtra("imageId", imageInfo.getId());
-        startActivity(i);
-    }
+//    @Override
+//    protected void onDestroy() {
+//        super.onDestroy();
+//        Intent i = new Intent(this, MainActivity.class);
+//        i.putExtra("ratingBarValue", "received foo data: " + data);
+//        i.putExtra("imageId", imageInfo.getId());
+////        startActivity(i);
+//    }
 
     @Override
     public void onDataPass(String data) {

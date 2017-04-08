@@ -1,6 +1,7 @@
 package com.example.ubuntu_master.image_gallery;
 
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,6 +13,8 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import static android.app.Activity.RESULT_OK;
 
 
 public class ImagesListFragment extends Fragment {
@@ -29,6 +32,27 @@ public class ImagesListFragment extends Fragment {
         put(9, new ImageInfo("Twitter5", "ala ma kota ale nie ma psa 11111 22222 333333 44444", "nature5", 30, 9));
     }};
 
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == 999 && resultCode == RESULT_OK){
+
+            int id = Integer.parseInt(data.getStringExtra("imageId"));
+            int progress = (int) (Float.parseFloat(data.getStringExtra("ratingBarValue")) * 10);
+
+
+            System.out.println("WORKS WORKS WORKS WORKS " + progress);
+            System.out.println("WORKS WORKS WORKS WORKS " + id);
+
+            ImageInfo ii = imagesInfo.get(id);
+
+            imagesInfo.put(id, new ImageInfo(ii.getTitle(), ii.getDescription(), ii.getImage(), progress, id));
+
+
+
+//            data.getStringExtra("message");
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -56,7 +80,8 @@ public class ImagesListFragment extends Fragment {
                 i.putExtra("imageName", imagesInfo.get(position).getImage());
                 i.putExtra("imageProgress", String.valueOf(imagesInfo.get(position).getProgress()));
                 i.putExtra("imageId", String.valueOf(imagesInfo.get(position).getId()));
-                startActivity(i);
+//                startActivity(i);
+                startActivityForResult(i, 999);
 
             }
         });
@@ -67,6 +92,7 @@ public class ImagesListFragment extends Fragment {
     public void onResume() {
         super.onResume();
 //        System.out.println("%%%%%%%%%%% " + getArguments().get("ratingBarValue"));
+        imagesInfo.put(3, new ImageInfo("Twitter2", "ala ma kota ale nie ma psa 11111 22222 333333 44444", "nature4", 50, 3));
     }
 
     private String[] getTitleArray(){

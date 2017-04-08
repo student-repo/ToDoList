@@ -2,6 +2,7 @@ package com.example.ubuntu_master.image_gallery;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -20,6 +21,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
+import static android.content.Intent.FLAG_ACTIVITY_SINGLE_TOP;
+
 public class MainActivity extends AppCompatActivity {
 
     private ImagesListFragment portraitFragment;
@@ -30,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         getSupportActionBar().setTitle("Image Gallery");  // provide compatibility to all the versions
+
+        this.getIntent().addFlags(FLAG_ACTIVITY_SINGLE_TOP);
 
         FragmentManager fm = getFragmentManager();
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
@@ -48,25 +53,29 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        System.out.println("we gare it!!!!!!!!!");
+        System.out.println(intent.getExtras().get("ratingBarValue"));
+        System.out.println(intent.getExtras().get("imageId"));
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
         try {
             Bundle imageInfo = getIntent().getExtras();
-            System.out.println("we gare it");
-            System.out.println(imageInfo.get("ratingBarValue"));
-            System.out.println(imageInfo.get("imageId"));
+//            System.out.println(imageInfo.get("ratingBarValue"));
+//            System.out.println(imageInfo.get("imageId"));
+//            System.out.println("we gare it");
 
 //            Bundle b = new Bundle();
 //            b.putString("ratingBarValue", imageInfo.get("ratingBarValue").toString());
 //            b.putString("imageId", imageInfo.get("imageId").toString());
 //            portraitFragment.setArguments(b);
-            FragmentManager fm = getFragmentManager();
-            FragmentTransaction fragmentTransaction = fm.beginTransaction();
 
-            portraitFragment = new ImagesListFragment();
-            fragmentTransaction.replace(android.R.id.content, portraitFragment);
 
-            fragmentTransaction.commit();
         }
         catch (Exception e){
             System.out.println("nie udalo sie");
