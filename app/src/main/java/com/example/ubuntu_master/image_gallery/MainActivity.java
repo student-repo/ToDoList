@@ -22,6 +22,8 @@ import java.util.LinkedHashMap;
 
 public class MainActivity extends AppCompatActivity {
 
+    private ImagesListFragment portraitFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,8 +37,8 @@ public class MainActivity extends AppCompatActivity {
         // get the display mode
         int displaymode = getResources().getConfiguration().orientation;
         if (displaymode == 1) { // it portrait mode
-            ImagesListFragment f1 = new ImagesListFragment();
-            fragmentTransaction.replace(android.R.id.content, f1);
+            portraitFragment = new ImagesListFragment();
+            fragmentTransaction.replace(android.R.id.content, portraitFragment);
         }
 //        else {// its landscape
 //            Fragment2 f2 = new Fragment2();
@@ -44,6 +46,48 @@ public class MainActivity extends AppCompatActivity {
 //        }
         fragmentTransaction.commit();
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        try {
+            Bundle imageInfo = getIntent().getExtras();
+            System.out.println("we gare it");
+            System.out.println(imageInfo.get("ratingBarValue"));
+            System.out.println(imageInfo.get("imageId"));
+
+//            Bundle b = new Bundle();
+//            b.putString("ratingBarValue", imageInfo.get("ratingBarValue").toString());
+//            b.putString("imageId", imageInfo.get("imageId").toString());
+//            portraitFragment.setArguments(b);
+            FragmentManager fm = getFragmentManager();
+            FragmentTransaction fragmentTransaction = fm.beginTransaction();
+
+            portraitFragment = new ImagesListFragment();
+            fragmentTransaction.replace(android.R.id.content, portraitFragment);
+
+            fragmentTransaction.commit();
+        }
+        catch (Exception e){
+            System.out.println("nie udalo sie");
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -26,21 +26,25 @@ public class CustomList extends ArrayAdapter<String> {
     @Override
     public View getView(int position, View view, ViewGroup parent) {
         LayoutInflater inflater = context.getLayoutInflater();
+
         View rowView= inflater.inflate(R.layout.list_single, null, true);
+
         TextView txtTitle = (TextView) rowView.findViewById(R.id.image_title);
         TextView des = (TextView) rowView.findViewById(R.id.image_description);
+
 
         des.setText(imagesInfo.get(position).getDescription());
 
         ImageView imageView = (ImageView) rowView.findViewById(R.id.list_image);
         txtTitle.setText(imagesInfo.get(position).getTitle());
 
-//        String mDrawableName = "nature" + (position % 5 + 1);
         String mDrawableName = imagesInfo.get(position).getImage();
         int resID = context.getResources().getIdentifier(mDrawableName , "drawable", context.getPackageName());
 
-//        imageView.setImageResource(imageId[position]);
+
         imageView.setImageResource(resID);
+
+
         return rowView;
     }
 

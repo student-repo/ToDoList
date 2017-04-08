@@ -2,8 +2,11 @@ package com.example.ubuntu_master.image_gallery;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.RatingBar;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -11,9 +14,11 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class SingleImageActivity extends AppCompatActivity {
+public class SingleImageActivity extends AppCompatActivity implements SingleImageFragment.OnDataPass {
+
 
     private ImageInfo imageInfo;
+    private String data = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,7 +30,7 @@ public class SingleImageActivity extends AppCompatActivity {
 
         Bundle imageInfo = getIntent().getExtras();
         this.imageInfo = new ImageInfo(imageInfo.getString("imageTitle"), imageInfo.getString("imageDescription"),
-                imageInfo.getString("imageName"), Integer.parseInt(imageInfo.getString("imageProgress")));
+                imageInfo.getString("imageName"), Integer.parseInt(imageInfo.getString("imageProgress")), Integer.parseInt(imageInfo.getString("imageId")));
 //        System.out.println("second activity: " + this.imageInfo.getTitle());
 //        System.out.println("second activity: " + this.imageInfo.getDescription());
 //        System.out.println("second activity: " + this.imageInfo.getImage());
@@ -50,13 +55,21 @@ public class SingleImageActivity extends AppCompatActivity {
 //            fragmentTransaction.replace(android.R.id.content, f2);
 //        }
         fragmentTransaction.commit();
-
-
-
-
-
     }
 
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Intent i = new Intent(this, MainActivity.class);
+        i.putExtra("ratingBarValue", "received foo data: " + data);
+        i.putExtra("imageId", imageInfo.getId());
+        startActivity(i);
+    }
 
+    @Override
+    public void onDataPass(String data) {
+        System.out.println("On data pass!!!! : "  + data);
+        this.data = data;
+    }
 }

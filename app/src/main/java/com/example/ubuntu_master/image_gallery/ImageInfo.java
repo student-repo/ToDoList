@@ -6,13 +6,15 @@ public class ImageInfo {
     private String description;
     private String image;
     private int progress;
+    private int id;
 
 
-    public ImageInfo(String title, String description, String image, int progress) {
+    public ImageInfo(String title, String description, String image, int progress, int id) {
         this.title = title;
         this.description = description;
         this.image = image;
         this.progress = progress;
+        this.id = id;
     }
 
     public String getTitle() {
@@ -29,5 +31,9 @@ public class ImageInfo {
 
     public int getProgress() {
         return progress;
+    }
+
+    public int getId() {
+        return id;
     }
 }
