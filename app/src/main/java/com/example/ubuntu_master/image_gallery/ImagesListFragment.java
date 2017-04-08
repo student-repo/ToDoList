@@ -47,7 +47,10 @@ public class ImagesListFragment extends Fragment {
                 Toast.makeText(getActivity(), "You Clicked at " + imagesInfo.get(position).getTitle(), Toast.LENGTH_SHORT).show();
 
                 Intent i = new Intent(getActivity(), SingleImageActivity.class);
-                i.putExtra("imageInfo", imagesInfo.get(position).getTitle());
+                i.putExtra("imageTitle", imagesInfo.get(position).getTitle());
+                i.putExtra("imageDescription", imagesInfo.get(position).getDescription());
+                i.putExtra("imageName", imagesInfo.get(position).getImage());
+                i.putExtra("imageProgress", String.valueOf(imagesInfo.get(position).getProgress()   ));
                 startActivity(i);
 
             }

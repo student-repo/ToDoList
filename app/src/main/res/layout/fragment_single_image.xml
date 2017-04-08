@@ -1,0 +1,67 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.ubuntu_master.image_gallery.SingleImageFragment">
+
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/image_info_layout1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/image_title1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="asdas"
+                android:textSize="20dp"
+                android:layout_marginLeft="10dp"/>
+
+            <TextView
+                android:id="@+id/image_description1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="10dp"
+                android:layout_marginLeft="10dp"
+                android:text="ala ma kota"
+                android:ellipsize="none"
+                android:scrollHorizontally="true"
+                />
+            <RatingBar
+                android:id="@+id/rating_bar1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:progress="30"
+                android:isIndicator="true"
+                android:scaleX="0.5"
+                android:scaleY="0.5"
+                />
+
+            <TextView
+                android:id="@+id/foo"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textSize="40dp"/>
+
+
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</RelativeLayout>
+
+<!--<TextView-->
+<!--android:layout_below="@+id/foo1"-->
+<!--android:id="@+id/foo"-->
+<!--android:layout_width="match_parent"-->
+<!--android:layout_height="match_parent"-->
+<!--android:text="adawdawd"-->
+<!--android:textSize="40dp"/>-->
