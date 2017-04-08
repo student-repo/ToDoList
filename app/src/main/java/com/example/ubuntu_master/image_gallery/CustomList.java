@@ -8,17 +8,19 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 public class CustomList extends ArrayAdapter<String> {
 
     private final Activity context;
-    private final String[] web;
-    private final Integer[] imageId;
+    private final HashMap<Integer, ImageInfo> imagesInfo;
     public CustomList(Activity context,
-                      String[] web, Integer[] imageId) {
-        super(context, R.layout.list_single, web);
+                      String[] imagesTitles, HashMap<Integer, ImageInfo> imagesInfo) {
+        super(context, R.layout.list_single, imagesTitles);
         this.context = context;
-        this.web = web;
-        this.imageId = imageId;
+        this.imagesInfo = imagesInfo;
     }
 
     @Override
@@ -28,17 +30,26 @@ public class CustomList extends ArrayAdapter<String> {
         TextView txtTitle = (TextView) rowView.findViewById(R.id.image_title);
         TextView des = (TextView) rowView.findViewById(R.id.image_description);
 
-        des.setText("ala nie ma kota 111111 222222 3333 4444 5555  6666666 7777777 8888888 999999 101010101 1111111  ");
+        des.setText(imagesInfo.get(position).getDescription());
 
         ImageView imageView = (ImageView) rowView.findViewById(R.id.list_image);
-        txtTitle.setText(web[position]);
+        txtTitle.setText(imagesInfo.get(position).getTitle());
 
-        String mDrawableName = "nature" + (position % 5 + 1);
+//        String mDrawableName = "nature" + (position % 5 + 1);
+        String mDrawableName = imagesInfo.get(position).getImage();
         int resID = context.getResources().getIdentifier(mDrawableName , "drawable", context.getPackageName());
 
 //        imageView.setImageResource(imageId[position]);
         imageView.setImageResource(resID);
         return rowView;
+    }
+
+    private String[] createTitleArray(){
+        ArrayList<String> s = new ArrayList<>();
+        for(Integer i: imagesInfo.keySet()){
+            s.add(i, imagesInfo.get(i).getTitle());
+        }
+        return (String[])s.toArray();
     }
 }
 
