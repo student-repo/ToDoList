@@ -41,11 +41,6 @@ public class CustomList extends ArrayAdapter<String> {
         else{
             rr.setVisibility(View.GONE);
         }
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//        RatingBar rr = (RatingBar)rowView.findViewById(R.id.rating_bar);
-//        rr.setProgress(imagesInfo.get(position).getProgress() / 10);
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
         des.setText(imagesInfo.get(position).getDescription());
 

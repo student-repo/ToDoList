@@ -6,6 +6,7 @@ import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
@@ -37,6 +38,10 @@ public class SingleImageFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_single_image, container, false);
         this.imageInfo = new ImageInfo(getArguments().getString("imageTitle"), getArguments().getString("imageDescription"),
                 getArguments().getString("imageName"), Integer.parseInt(getArguments().getString("imageProgress")), Integer.parseInt(getArguments().getString("imageId")));
+
+        ImageView iv = (ImageView)view.findViewById(R.id.single_image);
+        int resID = getActivity().getResources().getIdentifier(imageInfo.getImage() + "_big" , "drawable", getActivity().getPackageName());
+        iv.setImageResource(resID);
 
         TextView t = (TextView)view.findViewById(R.id.single_view_description);
         t.setText(imageInfo.getDescription());

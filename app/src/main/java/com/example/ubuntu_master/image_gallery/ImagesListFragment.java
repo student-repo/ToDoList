@@ -22,7 +22,7 @@ public class ImagesListFragment extends Fragment {
 
     public interface updateImagesListFragment {
         void updateImagesListFragment(int id, int progress);
-        void fpp(String s, int progress, int id);
+        void handleLandscapeListClick(String s, int progress, int id);
     }
 
     updateImagesListFragment dataPasser;
@@ -38,7 +38,7 @@ public class ImagesListFragment extends Fragment {
     }
 
     public void fpp(String s, int progress, int id){
-        dataPasser.fpp(s, progress, id);
+        dataPasser.handleLandscapeListClick(s, progress, id);
     }
 
 
@@ -52,7 +52,7 @@ public class ImagesListFragment extends Fragment {
                 updateImagesListFragment(id, progress);
             }
             catch(Exception e){
-                System.out.println("second bug " + e);
+                System.out.println(e);
             }
         }
     }

@@ -20,6 +20,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -28,7 +29,7 @@ import java.util.List;
 
 import static android.content.Intent.FLAG_ACTIVITY_SINGLE_TOP;
 
-public class MainActivity extends AppCompatActivity implements ImagesListFragment.updateImagesListFragment, SimpleFragment.foo{
+public class MainActivity extends AppCompatActivity implements ImagesListFragment.updateImagesListFragment, SimpleFragment.updateImageInfoData{
 
 
     private HashMap<Integer, ImageInfo> imagesInfo = new HashMap<Integer, ImageInfo>(){{
@@ -44,33 +45,22 @@ public class MainActivity extends AppCompatActivity implements ImagesListFragmen
         put(9, new ImageInfo("Image9", "Image9 description description description", "nature5", 0, 9));
     }};
 
-    public interface foo3 {
-        void foo3( int progress, int id);
-    }
-
-    foo3 dataParser;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         try{
             restoreInstanceState(savedInstanceState);
         }
-        catch(Exception e){
-
-        }
-
-        System.out.println("ON CREATE MAIN ACTIVITY");
-
-
+        catch(Exception e){}
         getSupportActionBar().setTitle("Image Gallery");  // provide compatibility to all the versions
 
         this.getIntent().addFlags(FLAG_ACTIVITY_SINGLE_TOP);
         commitFragment();
     }
+
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
@@ -105,8 +95,7 @@ public class MainActivity extends AppCompatActivity implements ImagesListFragmen
     }
 
     @Override
-    public void foo(int progress, int id) {
-        System.out.println("main activity setting progress : " + imagesInfo.get(id).getProgress());
+    public void updateImageInfoData(int progress, int id) {
         ImageInfo ii = imagesInfo.get(id);
         ii.setProgress(progress);
         imagesInfo.put(id, ii);
@@ -116,20 +105,23 @@ public class MainActivity extends AppCompatActivity implements ImagesListFragmen
     }
 
     @Override
-    public void fpp(String s, int progress, int id) {
-        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@ " + " id: " + id + " progress = " + progress);
-        TextView tt = (TextView)findViewById(R.id.landscape_image_title);
+    public void handleLandscapeListClick(String s, int progress, int id) {
+        TextView tt = (TextView)findViewById(R.id.landscape_id);
         tt.setText(String.valueOf(id));
 
+        TextView title = (TextView)findViewById(R.id.landscape_image_title);
+        title.setText(imagesInfo.get(id).getTitle());
+
+        TextView description = (TextView)findViewById(R.id.landscape_description);
+        description.setText(imagesInfo.get(id).getDescription());
+
         ImageView iv = (ImageView)findViewById(R.id.landscape_image);
-        iv.setImageResource(R.drawable.nature_big);
+        int resID = getResources().getIdentifier(imagesInfo.get(id).getImage() + "_big" , "drawable", getPackageName());
+        iv.setImageResource(resID);
 
         RatingBar rb = (RatingBar)findViewById(R.id.landscape_rating_bar);
         rb.setVisibility(View.VISIBLE);
-//        rb.setProgress(progress/10);
         rb.setProgress(imagesInfo.get(id).getProgress() / 10);
-
-        dataParser.foo3(progress / 10, id);
     }
 
     private void commitFragment(){
@@ -139,20 +131,12 @@ public class MainActivity extends AppCompatActivity implements ImagesListFragmen
         int displaymode = getResources().getConfiguration().orientation;
         if (displaymode == 1) { // it portrait mode
             ImagesListFragment portraitFragment = new ImagesListFragment();
-//            dataParser = (foo3) portraitFragment;
 
-            System.out.println("START PROGRESS VALUE");
-            int[] arr = getProgressArray();
-            for(Integer i: arr){
-                System.out.println(i);
-            }
-            System.out.println("END PROGRESS VALUE");
             portraitFragment.setArguments(getBundle());
             fragmentTransaction.replace(android.R.id.content, portraitFragment);
         }
         else {// its landscape
             LandscapeFragment f = new LandscapeFragment();
-            dataParser = (foo3) f;
 
             f.setArguments(getBundle());
             fragmentTransaction.replace(android.R.id.content, f);
@@ -170,6 +154,27 @@ public class MainActivity extends AppCompatActivity implements ImagesListFragmen
         b.putIntArray("idArray", getIdArray());
         return b;
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     private String[] getTitleArray(){
         ArrayList<String> s = new ArrayList<>();
         for(Integer i: imagesInfo.keySet()){
@@ -233,27 +238,6 @@ public class MainActivity extends AppCompatActivity implements ImagesListFragmen
         }
         return s;
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

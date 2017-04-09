@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 
-public class LandscapeFragment extends Fragment implements MainActivity.foo3{
+public class LandscapeFragment extends Fragment {
 
 
     @Override
@@ -45,8 +45,4 @@ public class LandscapeFragment extends Fragment implements MainActivity.foo3{
         return view;
     }
 
-    @Override
-    public void foo3(int progress, int id) {
-
-    }
 }

@@ -59,12 +59,9 @@ public class SingleImageActivity extends AppCompatActivity implements SingleImag
             SingleImageFragment f1 = new SingleImageFragment();
             f1.setArguments(imageInfo);
             fragmentTransaction.replace(android.R.id.content, f1);
-//            Fragment2 f2 = new Fragment2();
-//            fragmentTransaction.replace(android.R.id.content, f2);
         }
         fragmentTransaction.commit();
     }
-
 
     @Override
     public void onDataPass(String data) {
