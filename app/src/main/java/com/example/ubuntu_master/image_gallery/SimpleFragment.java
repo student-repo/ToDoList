@@ -42,7 +42,12 @@ public class SimpleFragment extends Fragment {
                 String rateValue = String.valueOf(ratingBar.getRating() * 2); // * 2 becouse values are weird (depend if we get from xml or not)
                 System.out.println("Rate for Module is"+rateValue);
                 TextView tt = (TextView)view.findViewById(R.id.landscape_image_title);
-                foo((int) (ratingBar.getRating() * 2 * 10), Integer.parseInt(tt.getText().toString()));
+                try{
+                    foo((int) (ratingBar.getRating() * 2 * 10), Integer.parseInt(tt.getText().toString()));
+                }
+                catch (Exception e){
+                    System.out.println("first bug"  + e);
+                }
 //                passData(rateValue);
             }
         });

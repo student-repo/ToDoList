@@ -35,11 +35,11 @@ public class LandscapeFragment extends Fragment implements MainActivity.foo3{
 
         ImagesListFragment ff = new ImagesListFragment();
         ff.setArguments(b);
-        getFragmentManager().beginTransaction().add(R.id.fragment1, ff).commit();
+        getChildFragmentManager().beginTransaction().add(R.id.fragment1, ff).commit();
 
         SimpleFragment fff = new SimpleFragment();
 
-        getFragmentManager().beginTransaction().add(R.id.fragment2, fff).commit();
+        getChildFragmentManager().beginTransaction().add(R.id.fragment2, fff).commit();
 
 
         return view;

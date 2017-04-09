@@ -28,10 +28,8 @@ import java.util.List;
 
 import static android.content.Intent.FLAG_ACTIVITY_SINGLE_TOP;
 
-//AppCompatActivity
 public class MainActivity extends AppCompatActivity implements ImagesListFragment.updateImagesListFragment, SimpleFragment.foo{
 
-    private ImagesListFragment portraitFragment;
 
     private HashMap<Integer, ImageInfo> imagesInfo = new HashMap<Integer, ImageInfo>(){{
         put(0, new ImageInfo("Image0", "Image0 description description description", "nature1", 0, 0));
@@ -58,6 +56,15 @@ public class MainActivity extends AppCompatActivity implements ImagesListFragmen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        try{
+            restoreInstanceState(savedInstanceState);
+        }
+        catch(Exception e){
+
+        }
+
+        System.out.println("ON CREATE MAIN ACTIVITY");
+
 
         getSupportActionBar().setTitle("Image Gallery");  // provide compatibility to all the versions
 
@@ -68,18 +75,18 @@ public class MainActivity extends AppCompatActivity implements ImagesListFragmen
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
+        restoreInstanceState(savedInstanceState);
+     }
+
+    private void restoreInstanceState(Bundle savedInstanceState){
         ArrayList<Integer> arr1 = savedInstanceState.getIntegerArrayList("ids");
         ArrayList<Integer> arr2 = savedInstanceState.getIntegerArrayList("progresses");
         for(Integer j : arr1){
-
-            System.out.println(j);
-            System.out.println(arr2.get(j));
-
             ImageInfo ii = imagesInfo.get(j);
             ii.setProgress(arr2.get(j));
             imagesInfo.put(j, ii);
         }
-     }
+    }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -131,24 +138,24 @@ public class MainActivity extends AppCompatActivity implements ImagesListFragmen
         // get the display mode
         int displaymode = getResources().getConfiguration().orientation;
         if (displaymode == 1) { // it portrait mode
-            portraitFragment = new ImagesListFragment();
+            ImagesListFragment portraitFragment = new ImagesListFragment();
+//            dataParser = (foo3) portraitFragment;
 
+            System.out.println("START PROGRESS VALUE");
+            int[] arr = getProgressArray();
+            for(Integer i: arr){
+                System.out.println(i);
+            }
+            System.out.println("END PROGRESS VALUE");
             portraitFragment.setArguments(getBundle());
             fragmentTransaction.replace(android.R.id.content, portraitFragment);
         }
         else {// its landscape
-//            Fragment2 f2 = new Fragment2();
-//            fragmentTransaction.replace(android.R.id.content, f2);
-
-
-//            portraitFragment = new ImagesListFragment();
             LandscapeFragment f = new LandscapeFragment();
             dataParser = (foo3) f;
 
-//        portraitFragment.setArguments(getBundle());
             f.setArguments(getBundle());
             fragmentTransaction.replace(android.R.id.content, f);
-//            fragmentTransaction.replace(android.R.id.content, f);
         }
         fragmentTransaction.commit();
     }

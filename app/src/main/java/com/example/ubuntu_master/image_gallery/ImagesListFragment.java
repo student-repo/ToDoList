@@ -45,18 +45,21 @@ public class ImagesListFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode == 999 && resultCode == RESULT_OK){
-            int id = Integer.parseInt(data.getStringExtra("imageId"));
-            int progress = (int) (Float.parseFloat(data.getStringExtra("ratingBarValue")) * 10);
+            try{
+                int id = Integer.parseInt(data.getStringExtra("imageId"));
+                int progress = (int) (Float.parseFloat(data.getStringExtra("ratingBarValue")) * 10);
 
-            updateImagesListFragment(id, progress);
+                updateImagesListFragment(id, progress);
+            }
+            catch(Exception e){
+                System.out.println("second bug " + e);
+            }
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-        System.out.println("###################");
 
         final String[] titleArray = getArguments().getStringArray("titleArray");
         final String[] descriptionArray = getArguments().getStringArray("descriptionArray");
