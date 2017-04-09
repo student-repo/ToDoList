@@ -27,7 +27,8 @@ import java.util.List;
 
 import static android.content.Intent.FLAG_ACTIVITY_SINGLE_TOP;
 
-public class MainActivity extends AppCompatActivity implements ImagesListFragment.updateImagesListFragment {
+//AppCompatActivity
+public class MainActivity extends AppCompatActivity implements ImagesListFragment.updateImagesListFragment, SimpleFragment.foo{
 
     private ImagesListFragment portraitFragment;
 
@@ -44,11 +45,18 @@ public class MainActivity extends AppCompatActivity implements ImagesListFragmen
         put(9, new ImageInfo("Twitter5", "ala ma kota ale nie ma psa 11111 22222 333333 44444", "nature5", 0, 9));
     }};
 
+    public interface foo3 {
+        void foo3( int progress, int id);
+    }
+
+    foo3 dataParser;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         getSupportActionBar().setTitle("Image Gallery");  // provide compatibility to all the versions
 
@@ -65,15 +73,31 @@ public class MainActivity extends AppCompatActivity implements ImagesListFragmen
     }
 
     @Override
-    public void fpp(String s) {
+    public void foo(int progress, int id) {
+        System.out.println("main activity setting progress : " + imagesInfo.get(id).getProgress());
+        ImageInfo ii = imagesInfo.get(id);
+        ii.setProgress(progress);
+        imagesInfo.put(id, ii);
+
+        RatingBar rb = (RatingBar)findViewById(R.id.landscape_rating_bar);
+        rb.setProgress(imagesInfo.get(id).getProgress() / 10);
+    }
+
+    @Override
+    public void fpp(String s, int progress, int id) {
+        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@ " + " id: " + id + " progress = " + progress);
         TextView tt = (TextView)findViewById(R.id.landscape_image_title);
-        tt.setText(s);
+        tt.setText(String.valueOf(id));
 
         ImageView iv = (ImageView)findViewById(R.id.landscape_image);
         iv.setImageResource(R.drawable.nature_big);
 
         RatingBar rb = (RatingBar)findViewById(R.id.landscape_rating_bar);
         rb.setVisibility(View.VISIBLE);
+//        rb.setProgress(progress/10);
+        rb.setProgress(imagesInfo.get(id).getProgress() / 10);
+
+        dataParser.foo3(progress / 10, id);
     }
 
     private void commitFragment(){
@@ -83,7 +107,6 @@ public class MainActivity extends AppCompatActivity implements ImagesListFragmen
         int displaymode = getResources().getConfiguration().orientation;
         if (displaymode == 1) { // it portrait mode
             portraitFragment = new ImagesListFragment();
-
 
             portraitFragment.setArguments(getBundle());
             fragmentTransaction.replace(android.R.id.content, portraitFragment);
@@ -95,6 +118,7 @@ public class MainActivity extends AppCompatActivity implements ImagesListFragmen
 
 //            portraitFragment = new ImagesListFragment();
             LandscapeFragment f = new LandscapeFragment();
+            dataParser = (foo3) f;
 
 //        portraitFragment.setArguments(getBundle());
             f.setArguments(getBundle());

@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,7 +22,7 @@ public class ImagesListFragment extends Fragment {
 
     public interface updateImagesListFragment {
         void updateImagesListFragment(int id, int progress);
-        void fpp(String s);
+        void fpp(String s, int progress, int id);
     }
 
     updateImagesListFragment dataPasser;
@@ -36,8 +37,8 @@ public class ImagesListFragment extends Fragment {
         dataPasser.updateImagesListFragment(id, progress);
     }
 
-    public void fpp(String s){
-        dataPasser.fpp(s);
+    public void fpp(String s, int progress, int id){
+        dataPasser.fpp(s, progress, id);
     }
 
 
@@ -54,6 +55,8 @@ public class ImagesListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        System.out.println("###################");
 
         final String[] titleArray = getArguments().getStringArray("titleArray");
         final String[] descriptionArray = getArguments().getStringArray("descriptionArray");
@@ -91,7 +94,7 @@ public class ImagesListFragment extends Fragment {
                 else {
 //                    TextView tt = (TextView)view.findViewById(R.id.landscape_image_title);
 //                    tt.setText("adasdad");
-                    fpp(titleArray[position]);
+                    fpp(titleArray[position], progressArray[position], idArray[position]);
                 }
 
             }

@@ -1,5 +1,6 @@
 package com.example.ubuntu_master.image_gallery;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -8,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 
-public class LandscapeFragment extends Fragment {
+public class LandscapeFragment extends Fragment implements MainActivity.foo3{
 
 
     @Override
@@ -42,5 +43,10 @@ public class LandscapeFragment extends Fragment {
 
 
         return view;
+    }
+
+    @Override
+    public void foo3(int progress, int id) {
+
     }
 }
