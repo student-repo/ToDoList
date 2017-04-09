@@ -21,6 +21,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -33,16 +34,16 @@ public class MainActivity extends AppCompatActivity implements ImagesListFragmen
     private ImagesListFragment portraitFragment;
 
     private HashMap<Integer, ImageInfo> imagesInfo = new HashMap<Integer, ImageInfo>(){{
-        put(0, new ImageInfo("Google Plus1", "ala ma kota ale nie ma psa 11111 22222 333333 44444", "nature1", 0, 0));
-        put(1, new ImageInfo("Twitter1", "ala ma kota ale nie ma psa 11111 22222 333333 44444", "nature2", 0, 1));
-        put(2, new ImageInfo("Google Plus2", "ala ma kota ale nie ma psa 11111 22222 333333 44444", "nature3", 0, 2));
-        put(3, new ImageInfo("Twitter2", "ala ma kota ale nie ma psa 11111 22222 333333 44444", "nature4", 0, 3));
-        put(4, new ImageInfo("Google Plus3", "ala ma kota ale nie ma psa 11111 22222 333333 44444", "nature5", 0, 4));
-        put(5, new ImageInfo("Twitter3", "ala ma kota ale nie ma psa 11111 22222 333333 44444", "nature1", 0, 5));
-        put(6, new ImageInfo("Google Plus4", "ala ma kota ale nie ma psa 11111 22222 333333 44444", "nature2", 0, 6));
-        put(7, new ImageInfo("Twitter4", "ala ma kota ale nie ma psa 11111 22222 333333 44444", "nature3", 0, 7));
-        put(8, new ImageInfo("Google Plus5", "ala ma kota ale nie ma psa 11111 22222 333333 44444", "nature4", 0, 8));
-        put(9, new ImageInfo("Twitter5", "ala ma kota ale nie ma psa 11111 22222 333333 44444", "nature5", 0, 9));
+        put(0, new ImageInfo("Image0", "Image0 description description description", "nature1", 0, 0));
+        put(1, new ImageInfo("Image1", "Image1 description description description", "nature2", 0, 1));
+        put(2, new ImageInfo("Image2", "Image2 description description description", "nature3", 0, 2));
+        put(3, new ImageInfo("Image3", "Image3 description description description", "nature4", 0, 3));
+        put(4, new ImageInfo("Image4", "Image4 description description description", "nature5", 0, 4));
+        put(5, new ImageInfo("Image5", "Image5 description description description", "nature1", 0, 5));
+        put(6, new ImageInfo("Image6", "Image6 description description description", "nature2", 0, 6));
+        put(7, new ImageInfo("Image7", "Image7 description description description", "nature3", 0, 7));
+        put(8, new ImageInfo("Image8", "Image8 description description description", "nature4", 0, 8));
+        put(9, new ImageInfo("Image9", "Image9 description description description", "nature5", 0, 9));
     }};
 
     public interface foo3 {
@@ -62,6 +63,30 @@ public class MainActivity extends AppCompatActivity implements ImagesListFragmen
 
         this.getIntent().addFlags(FLAG_ACTIVITY_SINGLE_TOP);
         commitFragment();
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        ArrayList<Integer> arr1 = savedInstanceState.getIntegerArrayList("ids");
+        ArrayList<Integer> arr2 = savedInstanceState.getIntegerArrayList("progresses");
+        for(Integer j : arr1){
+
+            System.out.println(j);
+            System.out.println(arr2.get(j));
+
+            ImageInfo ii = imagesInfo.get(j);
+            ii.setProgress(arr2.get(j));
+            imagesInfo.put(j, ii);
+        }
+     }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putIntegerArrayList("ids", getIdArrayList());
+        outState.putIntegerArrayList("progresses", getProgressArrayList());
     }
 
     @Override
@@ -177,6 +202,31 @@ public class MainActivity extends AppCompatActivity implements ImagesListFragmen
         }
         return Ints.toArray(s);
     }
+
+    private ArrayList<Integer> getIdArrayList(){
+        ArrayList<Integer> s = new ArrayList<>();
+//        int[] arr = imagesInfo.keySet();
+        Integer[] arr = imagesInfo.keySet().toArray(new Integer[imagesInfo.keySet().size()]);
+        Arrays.sort(arr);
+
+        for(Integer i: arr){
+            s.add(imagesInfo.get(i).getId());
+        }
+        return s;
+    }
+
+    private ArrayList<Integer> getProgressArrayList(){
+        ArrayList<Integer> s = new ArrayList<>();
+//        int[] arr = imagesInfo.keySet();
+        Integer[] arr = imagesInfo.keySet().toArray(new Integer[imagesInfo.keySet().size()]);
+        Arrays.sort(arr);
+
+        for(Integer i: arr){
+            s.add(imagesInfo.get(i).getProgress());
+        }
+        return s;
+    }
+
 
 
 
