@@ -2,17 +2,70 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginRight="10dp"
     android:layout_marginTop="10dp"
-    android:layout_marginLeft="10dp"
-    tools:context="com.example.ubuntu_master.image_gallery.ImagesListFragment">
+    tools:context="com.example.ubuntu_master.image_gallery.NoticeListFragment">
 
     <ListView
         android:id="@+id/listview"
         android:scrollbars="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:dividerHeight="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:divider="@android:color/transparent"
         >
     </ListView>
+
+
+    <LinearLayout
+        android:id="@+id/bottomEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:background="@color/colorPrimary">
+
+        <EditText
+            android:id="@+id/addQuickTask"
+            android:layout_width="0dp"
+            android:hint="Enter Quick Task here"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:textColor="#ffff"
+            android:textColorHighlight="#ffff"
+            android:layout_weight="5"
+            android:textCursorDrawable="@color/colorWhite"
+            android:gravity="top|left"
+            android:inputType="textMultiLine|textCapSentences"
+            android:maxLines="5"
+            android:minLines="3"
+            android:scrollHorizontally="false"
+            android:backgroundTint="@color/colorWhite"/>
+
+        <Button
+            android:id="@+id/quickTaskButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:gravity="center"
+            android:text="Add"
+            android:backgroundTint="@color/colorWhite"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/addTaskButton"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@drawable/round_button"
+        android:layout_above="@id/bottomEditText"
+        android:layout_marginBottom="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_alignParentRight="true"
+        android:text="+"
+        android:textSize="25dp"
+        android:textColor="#fff"
+        android:backgroundTint="@color/colorPrimary"/>
 
 </RelativeLayout>

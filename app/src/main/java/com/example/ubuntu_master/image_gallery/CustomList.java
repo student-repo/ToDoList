@@ -1,68 +1,87 @@
 package com.example.ubuntu_master.image_gallery;
 
 import android.app.Activity;
+import android.icu.util.Calendar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
-import android.widget.RatingBar;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
-import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class CustomList extends ArrayAdapter<String> {
 
     private final Activity context;
-    private final HashMap<Integer, ImageInfo> imagesInfo;
-    public CustomList(Activity context,
-                      String[] imagesTitles, HashMap<Integer, ImageInfo> imagesInfo) {
-        super(context, R.layout.list_single, imagesTitles);
+    private NoticeListFragment ilf;
+    private final HashMap<Integer, NoticeDetails> noticeInfo;
+    public CustomList(Activity context, NoticeListFragment ilf,
+                      String[] noticeTitles, HashMap<Integer, NoticeDetails> noticeInfo) {
+        super(context, R.layout.list_single, noticeTitles);
         this.context = context;
-        this.imagesInfo = imagesInfo;
+        this.noticeInfo = noticeInfo;
+        this.ilf = ilf;
     }
 
     @Override
-    public View getView(int position, View view, ViewGroup parent) {
+    public View getView(final int position, View view, ViewGroup parent) {
         LayoutInflater inflater = context.getLayoutInflater();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy MMM dd HH:mm:ss");
+        SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy MMM dd");
 
         View rowView= inflater.inflate(R.layout.list_single, null, true);
 
-        TextView txtTitle = (TextView) rowView.findViewById(R.id.image_title);
-        TextView des = (TextView) rowView.findViewById(R.id.image_description);
-        int displaymode = context.getResources().getConfiguration().orientation;
-        RatingBar rr = (RatingBar)rowView.findViewById(R.id.rating_bar);
-        if(displaymode == 1){
-            rr.setProgress(imagesInfo.get(position).getProgress() / 10);
 
+        final CheckBox bb = (CheckBox) rowView.findViewById(R.id.finishCheckBox);
+        if(noticeInfo.get(position).getFinished()){
+            bb.setChecked(true);
         }
         else{
-            rr.setVisibility(View.GONE);
+            bb.setChecked(false);
+        }
+        bb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(noticeInfo.get(position).getDate() == null){
+                    ilf.updateNoticeListFragment(noticeInfo.get(position).getId(),noticeInfo.get(position).getTitle(), noticeInfo.get(position).getDetails(),-1,-1,-1,-1,-1, !noticeInfo.get(position).getFinished());
+                }
+                else if(noticeInfo.get(position).getWithoutHours()){
+                    ilf.updateNoticeListFragment(noticeInfo.get(position).getId(),noticeInfo.get(position).getTitle(), noticeInfo.get(position).getDetails(),
+                            noticeInfo.get(position).getDate().get(java.util.Calendar.YEAR), noticeInfo.get(position).getDate().get(java.util.Calendar.MONTH),
+                            noticeInfo.get(position).getDate().get(java.util.Calendar.DAY_OF_MONTH),-1,-1, !noticeInfo.get(position).getFinished());
+                }
+                else{
+                    ilf.updateNoticeListFragment(noticeInfo.get(position).getId(),noticeInfo.get(position).getTitle(), noticeInfo.get(position).getDetails(),
+                            noticeInfo.get(position).getDate().get(java.util.Calendar.YEAR), noticeInfo.get(position).getDate().get(java.util.Calendar.MONTH),
+                            noticeInfo.get(position).getDate().get(java.util.Calendar.DAY_OF_MONTH),noticeInfo.get(position).getDate().get(java.util.Calendar.HOUR),
+                            noticeInfo.get(position).getDate().get(java.util.Calendar.MINUTE), !noticeInfo.get(position).getFinished());
+                }
+            }
+        });
+
+
+
+        TextView txtTitle = (TextView) rowView.findViewById(R.id.image_title);
+        TextView des = (TextView) rowView.findViewById(R.id.noticeDate);
+
+        if(noticeInfo.get(position).getDate() != null && noticeInfo.get(position).getWithoutHours()){
+            des.setText(sdf1.format(noticeInfo.get(position).getDate().getTime()));
+        }
+        else if(noticeInfo.get(position).getDate() != null){
+            des.setText(sdf.format(noticeInfo.get(position).getDate().getTime()));
         }
 
-        des.setText(imagesInfo.get(position).getDescription());
-
-        ImageView imageView = (ImageView) rowView.findViewById(R.id.list_image);
-        txtTitle.setText(imagesInfo.get(position).getTitle());
-
-        String mDrawableName = imagesInfo.get(position).getImage();
-        int resID = context.getResources().getIdentifier(mDrawableName , "drawable", context.getPackageName());
-
-
-        imageView.setImageResource(resID);
+        txtTitle.setText(noticeInfo.get(position).getTitle());
 
 
         return rowView;
     }
 
-    private String[] createTitleArray(){
-        ArrayList<String> s = new ArrayList<>();
-        for(Integer i: imagesInfo.keySet()){
-            s.add(i, imagesInfo.get(i).getTitle());
-        }
-        return (String[])s.toArray();
-    }
 }
 

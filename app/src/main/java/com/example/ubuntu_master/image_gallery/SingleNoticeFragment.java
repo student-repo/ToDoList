@@ -1,44 +1,28 @@
 package com.example.ubuntu_master.image_gallery;
 
-import android.app.Activity;
 import android.app.DatePickerDialog;
-import android.app.Fragment;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.icu.text.SimpleDateFormat;
 import android.icu.util.Calendar;
 import android.os.Bundle;
+import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import java.util.GregorianCalendar;
 import java.util.Locale;
 
 import static android.app.Activity.RESULT_OK;
 
-public class SimpleFragment extends Fragment {
 
-    public interface updateNoticeInfoData {
-        void updateNoticeInfoData(int id, String title, String details, int year, int month, int day, int hour, int minute, boolean finished);
-    }
-
-    updateNoticeInfoData dataPasser;
-
-    @Override
-    public void onAttach(Activity a) {
-        super.onAttach(a);
-        dataPasser = (updateNoticeInfoData) a;
-    }
-
-    void foo(int id, String title, String details, int year, int month, int day, int hour, int minute, boolean finished){
-        dataPasser.updateNoticeInfoData(id, title, details, year, month, day, hour, minute, finished);
-    }
+public class SingleNoticeFragment extends Fragment {
 
     public void setYear(int year) {
         this.year = year;
@@ -84,20 +68,21 @@ public class SimpleFragment extends Fragment {
     private String details = "";
 
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.fragment_single_image, container, false);
+        View view = inflater.inflate(R.layout.fragment_single_image, container, false);
 
+        setTitle(getArguments().getString("noticeTitle"));
+        setDetails(getArguments().getString("noticeDetails"));
+        setYear(Integer.parseInt(getArguments().getString("noticeYear")));
+        setMonth(Integer.parseInt(getArguments().getString("noticeMonth")));
+        setDay(Integer.parseInt(getArguments().getString("noticeDay")));
+        setHour(Integer.parseInt(getArguments().getString("noticeHour")));
+        setMinute(Integer.parseInt(getArguments().getString("noticeMinute")));
+        setId(Integer.parseInt(getArguments().getString("noticeId")));
 
-        setTitle(getArguments().getString("title"));
-        setDetails(getArguments().getString("details"));
-        setYear(getArguments().getInt("dateYear"));
-        setMonth(getArguments().getInt("dateMonth"));
-        setDay(getArguments().getInt("dateDay"));
-        setHour(getArguments().getInt("dateHour"));
-        setMinute(getArguments().getInt("dateMinute"));
-        setId(getArguments().getInt("id"));
         EditText eTitle = (EditText)view.findViewById(R.id.noticeTitle);
         eTitle.setText(title);
 
@@ -113,12 +98,9 @@ public class SimpleFragment extends Fragment {
             EditText eTime = (EditText)view.findViewById(R.id.noticeCalendarTime);
             eTime.setText(hour + " : " + minute);
         }
-
         TextView t = (TextView)view.findViewById(R.id.single_view_description);
 
         t.setText(getArguments().getString("noticeDate"));
-
-
 
         final EditText ee = (EditText)view.findViewById(R.id.noticeCalendar);
         final EditText eee = (EditText)view.findViewById(R.id.noticeCalendarTime);
@@ -185,6 +167,7 @@ public class SimpleFragment extends Fragment {
         });
 
 
+
         Button bb = (Button)view.findViewById(R.id.saveTaskButton);
 
         bb.setOnClickListener(new View.OnClickListener() {
@@ -209,12 +192,24 @@ public class SimpleFragment extends Fragment {
                         setHour(-1);
                         setMinute(-1);
                     }
+                    Intent i = new Intent();
+                    i.putExtra("noticeYear", String.valueOf(year));
+                    i.putExtra("noticeMonth", String.valueOf(month));
+                    i.putExtra("noticeDay", String.valueOf(day));
+                    i.putExtra("noticeHour", String.valueOf(hour));
+                    i.putExtra("noticeMinute", String.valueOf(minute));
+                    i.putExtra("noticeTitle", noticeTitle);
+                    i.putExtra("noticeDetails", noticeDetails);
+                    i.putExtra("noticeId", String.valueOf(id));
+                    getActivity().setResult(RESULT_OK, i);
 
-                    foo(id, noticeTitle, noticeDetails, year, month, day, hour, minute, false);
 
+                    getActivity().finish();
                 }
             }
         });
+
+
         return view;
     }
 

@@ -1,19 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:background="@drawable/customshape">
     <TableRow>
+
         <LinearLayout
             android:id="@+id/listItem_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp">
 
-            <ImageView
-                android:id="@+id/list_image"
-                android:layout_width="50dp"
-                android:layout_height="50dp"/>
-
+            <CheckBox
+                android:id="@+id/finishCheckBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:focusable="false"/>
 
             <LinearLayout
                 android:layout_weight="1"
@@ -30,21 +33,13 @@
                     android:layout_marginLeft="10dp"/>
 
                 <TextView
-                    android:id="@+id/image_description"
+                    android:id="@+id/noticeDate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="10dp"
                     android:layout_marginLeft="10dp"
                     android:ellipsize="none"
                     android:scrollHorizontally="true"
-                    />
-                <RatingBar
-                    android:id="@+id/rating_bar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:isIndicator="true"
-                    android:scaleX="0.5"
-                    android:scaleY="0.5"
                     />
 
 

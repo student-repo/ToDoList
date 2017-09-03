@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app='http://schemas.android.com/apk/res-auto'>
+
+    <item
+        android:id="@+id/menu_unfinished"
+        android:title="unfinished"
+        android:icon="@drawable/ic_keyboard_arrow_down_white_24dp"
+        app:showAsAction="never">
+    </item>
+
+    <item
+        android:id="@+id/menu_finished"
+        android:title="finished"
+        android:icon="@drawable/ic_keyboard_arrow_down_white_24dp"
+        app:showAsAction="never">
+    </item>
+
+
+</menu>

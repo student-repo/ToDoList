@@ -2,50 +2,35 @@ package com.example.ubuntu_master.image_gallery;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.Intent;
 import android.support.test.espresso.core.deps.guava.primitives.Ints;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.RatingBar;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.sql.Connection;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 
 import static android.content.Intent.FLAG_ACTIVITY_SINGLE_TOP;
 
-public class MainActivity extends AppCompatActivity implements ImagesListFragment.updateImagesListFragment, SimpleFragment.updateImageInfoData{
+public class MainActivity extends AppCompatActivity implements NoticeListFragment.updateNoticeListFragment, SimpleFragment.updateNoticeInfoData{//
+
+    private Boolean displayFinished = false;
+    private int landscapeDisplayId = -1;
 
 
-    private HashMap<Integer, ImageInfo> imagesInfo = new HashMap<Integer, ImageInfo>(){{
-        put(0, new ImageInfo("Image0", "Image0 description description description", "nature1", 0, 0));
-        put(1, new ImageInfo("Image1", "Image1 description description description", "nature2", 0, 1));
-        put(2, new ImageInfo("Image2", "Image2 description description description", "nature3", 0, 2));
-        put(3, new ImageInfo("Image3", "Image3 description description description", "nature4", 0, 3));
-        put(4, new ImageInfo("Image4", "Image4 description description description", "nature5", 0, 4));
-        put(5, new ImageInfo("Image5", "Image5 description description description", "nature1", 0, 5));
-        put(6, new ImageInfo("Image6", "Image6 description description description", "nature2", 0, 6));
-        put(7, new ImageInfo("Image7", "Image7 description description description", "nature3", 0, 7));
-        put(8, new ImageInfo("Image8", "Image8 description description description", "nature4", 0, 8));
-        put(9, new ImageInfo("Image9", "Image9 description description description", "nature5", 0, 9));
+    private HashMap<Integer, NoticeDetails> noticeDetails = new HashMap<Integer, NoticeDetails>(){{
+
     }};
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,12 +40,38 @@ public class MainActivity extends AppCompatActivity implements ImagesListFragmen
             restoreInstanceState(savedInstanceState);
         }
         catch(Exception e){}
-        getSupportActionBar().setTitle("Image Gallery");  // provide compatibility to all the versions
+        getSupportActionBar().setTitle("To Do List");  // provide compatibility to all the versions
 
         this.getIntent().addFlags(FLAG_ACTIVITY_SINGLE_TOP);
         commitFragment();
     }
 
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case R.id.menu_finished:{
+                displayFinished = true;
+                commitFragment();
+                break;
+            }
+            case  R.id.menu_unfinished:{
+                displayFinished = false;
+                commitFragment();
+                break;
+            }
+                default:
+                    return super.onOptionsItemSelected(item);
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.main_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
@@ -69,59 +80,125 @@ public class MainActivity extends AppCompatActivity implements ImagesListFragmen
      }
 
     private void restoreInstanceState(Bundle savedInstanceState){
-        ArrayList<Integer> arr1 = savedInstanceState.getIntegerArrayList("ids");
-        ArrayList<Integer> arr2 = savedInstanceState.getIntegerArrayList("progresses");
-        for(Integer j : arr1){
-            ImageInfo ii = imagesInfo.get(j);
-            ii.setProgress(arr2.get(j));
-            imagesInfo.put(j, ii);
+        ArrayList<Integer> ids = savedInstanceState.getIntegerArrayList("ids");
+        ArrayList<String> title = savedInstanceState.getStringArrayList("title");
+        ArrayList<String> details = savedInstanceState.getStringArrayList("details");
+        ArrayList<Integer> year = savedInstanceState.getIntegerArrayList("year");
+        ArrayList<Integer> month = savedInstanceState.getIntegerArrayList("month");
+        ArrayList<Integer> day = savedInstanceState.getIntegerArrayList("day");
+        ArrayList<Integer> hour = savedInstanceState.getIntegerArrayList("hour");
+        ArrayList<Integer> minute = savedInstanceState.getIntegerArrayList("minute");
+        ArrayList<Integer> withoutHours = savedInstanceState.getIntegerArrayList("withoutHours");
+        ArrayList<Integer> finished = savedInstanceState.getIntegerArrayList("finished");
+
+
+        for(int i = 0; i < ids.size(); i ++){
+            if(year.get(ids.get(i)) < 0){
+                if(finished.get(ids.get(i)) == 1){
+                    noticeDetails.put(ids.get(i), new NoticeDetails(title.get(ids.get(i)), details.get(ids.get(i)), null, ids.get(ids.get(i)), true, true));
+                }
+                else{
+                    noticeDetails.put(ids.get(i), new NoticeDetails(title.get(ids.get(i)), details.get(ids.get(i)), null, ids.get(ids.get(i)), true, false));
+                }
+            }
+            else if(withoutHours.get(ids.get(i)) == 1 || hour.get(ids.get(i)) < 0){
+                if(finished.get(ids.get(i)) == 1){
+                    noticeDetails.put(ids.get(i), new NoticeDetails(title.get(ids.get(i)), details.get(ids.get(i)), new GregorianCalendar(year.get(ids.get(i)), month.get(ids.get(i)),
+                            day.get(ids.get(i))), ids.get(ids.get(i)), true, true));
+                }
+                else{
+                    noticeDetails.put(ids.get(i), new NoticeDetails(title.get(ids.get(i)), details.get(ids.get(i)), new GregorianCalendar(year.get(ids.get(i)), month.get(ids.get(i)),
+                            day.get(ids.get(i))), ids.get(ids.get(i)), true, false));
+                }
+            }
+            else{
+                if(finished.get(ids.get(i)) == 1){
+                    noticeDetails.put(ids.get(i), new NoticeDetails(title.get(ids.get(i)), details.get(ids.get(i)), new GregorianCalendar(year.get(ids.get(i)), month.get(ids.get(i)),
+                            day.get(ids.get(i)), hour.get(ids.get(i)), minute.get(ids.get(i))), ids.get(ids.get(i)), false, true));
+                }
+                else{
+                    noticeDetails.put(ids.get(i), new NoticeDetails(title.get(ids.get(i)), details.get(ids.get(i)), new GregorianCalendar(year.get(ids.get(i)), month.get(ids.get(i)),
+                            day.get(ids.get(i)), hour.get(ids.get(i)), minute.get(ids.get(i))), ids.get(ids.get(i)), false, false));
+                }
+            }
         }
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        outState.putIntegerArrayList("ids", getRestoreIdArrayList());
+        outState.putStringArrayList("title", getRestoreTitleArrayList());
+        outState.putStringArrayList("details", getRestoreDetailsArrayList());
+        outState.putIntegerArrayList("year", getRestoreYearArrayList());
+        outState.putIntegerArrayList("month", getRestoreMonthArrayList());
+        outState.putIntegerArrayList("day", getRestoreDayArrayList());
+        outState.putIntegerArrayList("hour", getRestoreHourArrayList());
+        outState.putIntegerArrayList("minute", getRestoreMinuteArrayList());
+        outState.putIntegerArrayList("withoutHours", getRestoreWithoutHoursArrayList());
+        outState.putIntegerArrayList("finished", getRestoreFinishedArrayList());
 
-        outState.putIntegerArrayList("ids", getIdArrayList());
-        outState.putIntegerArrayList("progresses", getProgressArrayList());
     }
 
+
     @Override
-    public void updateImagesListFragment(int id, int progress) {
-        ImageInfo ii = imagesInfo.get(id);
-        ii.setProgress(progress);
-        imagesInfo.put(id, ii);
+    public void updateNoticeListFragment(int id, String title, String details, int year, int month, int day, int hour, int minute, boolean finished) {
+        if (id != -1){
+            if(year < 0){
+                noticeDetails.put(id, new NoticeDetails(title, details, null, id, false, finished));
+            }
+            else if(hour < 0){
+                noticeDetails.put(id, new NoticeDetails(title, details, new GregorianCalendar(year, month,day), id, true, finished));
+            }
+            else{
+                noticeDetails.put(id, new NoticeDetails(title, details, new GregorianCalendar(year, month,day, hour,minute), id, false, finished));
+            }
+        }
+        else {
+            if(year < 0){
+                noticeDetails.put(noticeDetails.keySet().size(), new NoticeDetails(title, details, null, noticeDetails.keySet().size(), false, finished));
+            }
+            else if(hour < 0){
+                noticeDetails.put(noticeDetails.keySet().size(), new NoticeDetails(title, details, new GregorianCalendar(year, month,day), noticeDetails.keySet().size(), true, finished));
+            }
+            else{
+                noticeDetails.put(noticeDetails.keySet().size(), new NoticeDetails(title, details, new GregorianCalendar(year, month,day, hour,minute), noticeDetails.keySet().size(), false, finished));
+            }
+        }
         commitFragment();
     }
 
     @Override
-    public void updateImageInfoData(int progress, int id) {
-        ImageInfo ii = imagesInfo.get(id);
-        ii.setProgress(progress);
-        imagesInfo.put(id, ii);
-
-        RatingBar rb = (RatingBar)findViewById(R.id.landscape_rating_bar);
-        rb.setProgress(imagesInfo.get(id).getProgress() / 10);
+    public void updateNoticeInfoData(int id, String title, String details, int year, int month, int day, int hour, int minute, boolean finished) {
+        if (id != -1){
+            if(year < 0){
+                noticeDetails.put(id, new NoticeDetails(title, details, null, id, false, finished));
+            }
+            else if(hour < 0){
+                noticeDetails.put(id, new NoticeDetails(title, details, new GregorianCalendar(year, month,day), id, true, finished));
+            }
+            else{
+                noticeDetails.put(id, new NoticeDetails(title, details, new GregorianCalendar(year, month,day, hour,minute), id, false, finished));
+            }
+        }
+        else {
+            if(year < 0){
+                noticeDetails.put(noticeDetails.keySet().size(), new NoticeDetails(title, details, null, noticeDetails.keySet().size(), false, finished));
+            }
+            else if(hour < 0){
+                noticeDetails.put(noticeDetails.keySet().size(), new NoticeDetails(title, details, new GregorianCalendar(year, month,day), noticeDetails.keySet().size(), true, finished));
+            }
+            else{
+                noticeDetails.put(noticeDetails.keySet().size(), new NoticeDetails(title, details, new GregorianCalendar(year, month,day, hour,minute), noticeDetails.keySet().size(), false, finished));
+            }
+        }
+        commitFragment();
     }
 
     @Override
-    public void handleLandscapeListClick(String s, int progress, int id) {
-        TextView tt = (TextView)findViewById(R.id.landscape_id);
-        tt.setText(String.valueOf(id));
-
-        TextView title = (TextView)findViewById(R.id.landscape_image_title);
-        title.setText(imagesInfo.get(id).getTitle());
-
-        TextView description = (TextView)findViewById(R.id.landscape_description);
-        description.setText(imagesInfo.get(id).getDescription());
-
-        ImageView iv = (ImageView)findViewById(R.id.landscape_image);
-        int resID = getResources().getIdentifier(imagesInfo.get(id).getImage() + "_big" , "drawable", getPackageName());
-        iv.setImageResource(resID);
-
-        RatingBar rb = (RatingBar)findViewById(R.id.landscape_rating_bar);
-        rb.setVisibility(View.VISIBLE);
-        rb.setProgress(imagesInfo.get(id).getProgress() / 10);
+    public void handleLandscapeListClick(int id, String title, String details,int year, int month, int day, int hour, int minute, boolean finished) {
+        landscapeDisplayId = id;
+        commitFragment();
     }
 
     private void commitFragment(){
@@ -130,7 +207,7 @@ public class MainActivity extends AppCompatActivity implements ImagesListFragmen
         // get the display mode
         int displaymode = getResources().getConfiguration().orientation;
         if (displaymode == 1) { // it portrait mode
-            ImagesListFragment portraitFragment = new ImagesListFragment();
+            NoticeListFragment portraitFragment = new NoticeListFragment();
 
             portraitFragment.setArguments(getBundle());
             fragmentTransaction.replace(android.R.id.content, portraitFragment);
@@ -148,10 +225,22 @@ public class MainActivity extends AppCompatActivity implements ImagesListFragmen
     private Bundle getBundle(){
         Bundle b = new Bundle();
         b.putStringArray("titleArray", getTitleArray());
-        b.putStringArray("descriptionArray", getDescriptionArray());
-        b.putIntArray("progressArray", getProgressArray());
-        b.putStringArray("imageArray", getImageArray());
+        b.putStringArray("detailsArray", getDetailsArray());
         b.putIntArray("idArray", getIdArray());
+        b.putIntArray("dateYear", getDateYearArray());
+        b.putIntArray("dateMonth", getDateMonthArray());
+        b.putIntArray("dateDay", getDateDayArray());
+        b.putIntArray("dateHour", getDateHourArray());
+        b.putIntArray("dateMinute", getDateMinuteArray());
+        b.putInt("mode", getMode());
+//        if(landscapeDisplayId != -1){
+        if(getIdArray().length == 0){
+            b.putInt("landscapeDisplayID", -1);
+        }
+        else {
+            b.putInt("landscapeDisplayID", landscapeDisplayId);
+        }
+//        }
         return b;
     }
 
@@ -177,71 +266,339 @@ public class MainActivity extends AppCompatActivity implements ImagesListFragmen
 
     private String[] getTitleArray(){
         ArrayList<String> s = new ArrayList<>();
-        for(Integer i: imagesInfo.keySet()){
-            s.add(imagesInfo.get(i).getTitle());
+        for(Integer i: noticeDetails.keySet()){
+            if(displayFinished){
+                if(noticeDetails.get(i).getFinished())
+                    s.add(noticeDetails.get(i).getTitle());
+            }
+            else{
+                if(!noticeDetails.get(i).getFinished())
+                    s.add(noticeDetails.get(i).getTitle());
+            }
         }
         return s.toArray(new String[0]);
     }
 
-    private String[] getDescriptionArray(){
+    private String[] getDetailsArray(){
         ArrayList<String> s = new ArrayList<>();
-        for(Integer i: imagesInfo.keySet()){
-            s.add(imagesInfo.get(i).getDescription());
+        for(Integer i: noticeDetails.keySet()){
+
+            if(displayFinished){
+                if(noticeDetails.get(i).getFinished())
+                    s.add(noticeDetails.get(i).getDetails());
+            }
+            else{
+                if(!noticeDetails.get(i).getFinished())
+                    s.add(noticeDetails.get(i).getDetails());
+            }
         }
         return s.toArray(new String[0]);
     }
 
-    private int[] getProgressArray(){
-        List<Integer> s = new ArrayList<>();
-        for(Integer i: imagesInfo.keySet()){
-            s.add(imagesInfo.get(i).getProgress());
-        }
-        return Ints.toArray(s);
-    }
-
-    private String[] getImageArray(){
-        ArrayList<String> s = new ArrayList<>();
-        for(Integer i: imagesInfo.keySet()){
-            s.add(imagesInfo.get(i).getImage());
-        }
-        return s.toArray(new String[0]);
-    }
 
     private int[] getIdArray(){
         List<Integer> s = new ArrayList<>();
-        for(Integer i: imagesInfo.keySet()){
-            s.add(imagesInfo.get(i).getId());
+        for(Integer i: noticeDetails.keySet()){
+            if(displayFinished){
+                if(noticeDetails.get(i).getFinished())
+                    s.add(noticeDetails.get(i).getId());
+            }
+            else{
+                if(!noticeDetails.get(i).getFinished())
+                    s.add(noticeDetails.get(i).getId());
+            }
         }
         return Ints.toArray(s);
     }
 
     private ArrayList<Integer> getIdArrayList(){
         ArrayList<Integer> s = new ArrayList<>();
-//        int[] arr = imagesInfo.keySet();
-        Integer[] arr = imagesInfo.keySet().toArray(new Integer[imagesInfo.keySet().size()]);
-        Arrays.sort(arr);
-
-        for(Integer i: arr){
-            s.add(imagesInfo.get(i).getId());
+        for(int i = 0; i <  noticeDetails.keySet().size(); i++){
+            s.add(noticeDetails.get(i).getId(), noticeDetails.get(i).getId());
         }
         return s;
     }
 
-    private ArrayList<Integer> getProgressArrayList(){
+
+    private int[] getDateYearArray(){
+        List<Integer> s = new ArrayList<>();
+        for(Integer i: noticeDetails.keySet()){
+            if(noticeDetails.get(i).getDate() != null){
+                if(displayFinished){
+                    if(noticeDetails.get(i).getFinished())
+                        s.add(noticeDetails.get(i).getDate().get(Calendar.YEAR));
+                }
+                else{
+                    if(!noticeDetails.get(i).getFinished())
+                        s.add(noticeDetails.get(i).getDate().get(Calendar.YEAR));
+                }
+            }
+            else{
+                if(displayFinished){
+                    if(noticeDetails.get(i).getFinished())
+                        s.add(-1);
+                }
+                else{
+                    if(!noticeDetails.get(i).getFinished())
+                        s.add(-1);
+                }
+            }
+        }
+        return Ints.toArray(s);
+    }
+
+    private int[] getDateMonthArray(){
+        List<Integer> s = new ArrayList<>();
+        for(Integer i: noticeDetails.keySet()){
+            if(noticeDetails.get(i).getDate() != null){
+                if(displayFinished){
+                    if(noticeDetails.get(i).getFinished())
+                        s.add(noticeDetails.get(i).getDate().get(Calendar.MONTH));
+                }
+                else{
+                    if(!noticeDetails.get(i).getFinished())
+                        s.add(noticeDetails.get(i).getDate().get(Calendar.MONTH));
+                }
+            }
+            else{
+                if(displayFinished){
+                    if(noticeDetails.get(i).getFinished())
+                        s.add(-1);
+                }
+                else{
+                    if(!noticeDetails.get(i).getFinished())
+                        s.add(-1);
+                }
+            }
+        }
+        return Ints.toArray(s);
+    }
+
+    private int[] getDateDayArray(){
+        List<Integer> s = new ArrayList<>();
+        for(Integer i: noticeDetails.keySet()){
+            if(noticeDetails.get(i).getDate() != null){
+                if(displayFinished){
+                    if(noticeDetails.get(i).getFinished())
+                        s.add(noticeDetails.get(i).getDate().get(Calendar.DAY_OF_MONTH));
+                }
+                else{
+                    if(!noticeDetails.get(i).getFinished())
+                        s.add(noticeDetails.get(i).getDate().get(Calendar.DAY_OF_MONTH));
+                }
+            }
+            else{
+                if(displayFinished){
+                    if(noticeDetails.get(i).getFinished())
+                        s.add(-1);
+                }
+                else{
+                    if(!noticeDetails.get(i).getFinished())
+                        s.add(-1);
+                }
+            }
+        }
+        return Ints.toArray(s);
+    }
+
+    private int[] getDateHourArray(){
+        List<Integer> s = new ArrayList<>();
+        for(Integer i: noticeDetails.keySet()){
+            if(noticeDetails.get(i).getWithoutHours()){
+                if(displayFinished){
+                    if(noticeDetails.get(i).getFinished())
+                        s.add(-1);
+                }
+                else{
+                    if(!noticeDetails.get(i).getFinished())
+                        s.add(-1);
+                }
+            }
+            else if(noticeDetails.get(i).getDate() != null){
+                if(displayFinished){
+                    if(noticeDetails.get(i).getFinished())
+                        s.add(noticeDetails.get(i).getDate().get(Calendar.HOUR));
+                }
+                else{
+                    if(!noticeDetails.get(i).getFinished())
+                        s.add(noticeDetails.get(i).getDate().get(Calendar.HOUR));
+                }
+            }
+            else{
+                if(displayFinished){
+                    if(noticeDetails.get(i).getFinished())
+                        s.add(-1);
+                }
+                else{
+                    if(!noticeDetails.get(i).getFinished())
+                        s.add(-1);
+                }
+            }
+        }
+        return Ints.toArray(s);
+    }
+
+    private int[] getDateMinuteArray(){
+        List<Integer> s = new ArrayList<>();
+        for(Integer i: noticeDetails.keySet()){
+            if(noticeDetails.get(i).getWithoutHours()){
+                if(displayFinished){
+                    if(noticeDetails.get(i).getFinished())
+                        s.add(-1);
+                }
+                else{
+                    if(!noticeDetails.get(i).getFinished())
+                        s.add(-1);
+                }
+            }
+            else if(noticeDetails.get(i).getDate() != null){
+                if(displayFinished){
+                    if(noticeDetails.get(i).getFinished())
+                        s.add(noticeDetails.get(i).getDate().get(Calendar.MINUTE));
+                }
+                else{
+                    if(!noticeDetails.get(i).getFinished())
+                        s.add(noticeDetails.get(i).getDate().get(Calendar.MINUTE));
+                }
+            }
+            else{
+                if(displayFinished){
+                    if(noticeDetails.get(i).getFinished())
+                        s.add(-1);
+                }
+                else{
+                    if(!noticeDetails.get(i).getFinished())
+                        s.add(-1);
+                }
+            }
+        }
+        return Ints.toArray(s);
+    }
+
+    private int getMode(){
+        if(displayFinished) return 0;
+        else return  1;
+    }
+
+
+
+
+
+    private ArrayList<Integer> getRestoreIdArrayList(){
         ArrayList<Integer> s = new ArrayList<>();
-//        int[] arr = imagesInfo.keySet();
-        Integer[] arr = imagesInfo.keySet().toArray(new Integer[imagesInfo.keySet().size()]);
-        Arrays.sort(arr);
-
-        for(Integer i: arr){
-            s.add(imagesInfo.get(i).getProgress());
+        for(int i = 0; i <  noticeDetails.keySet().size(); i++){
+            s.add(noticeDetails.get(i).getId(), noticeDetails.get(i).getId());
         }
         return s;
     }
 
+    private ArrayList<String> getRestoreTitleArrayList(){
+        ArrayList<String> s = new ArrayList<>();
+        for(int i = 0; i <  noticeDetails.keySet().size(); i++){
+            s.add(noticeDetails.get(i).getId(), noticeDetails.get(i).getTitle());
+        }
+        return s;
+    }
 
+    private ArrayList<String> getRestoreDetailsArrayList(){
+        ArrayList<String> s = new ArrayList<>();
+        for(int i = 0; i <  noticeDetails.keySet().size(); i++){
+            s.add(noticeDetails.get(i).getId(), noticeDetails.get(i).getDetails());
+        }
+        return s;
+    }
 
+    private ArrayList<Integer> getRestoreYearArrayList(){
+        ArrayList<Integer> s = new ArrayList<>();
+        for(int i = 0; i <  noticeDetails.keySet().size(); i++){
+            if(noticeDetails.get(i).getDate() != null){
+                s.add(noticeDetails.get(i).getId(), noticeDetails.get(i).getDate().get(Calendar.YEAR));
+            }
+            else {
+                s.add(noticeDetails.get(i).getId(), -1);
+            }
+        }
+        return s;
+    }
 
+    private ArrayList<Integer> getRestoreMonthArrayList() {
+        ArrayList<Integer> s = new ArrayList<>();
+        for (int i = 0; i < noticeDetails.keySet().size(); i++) {
+            if(noticeDetails.get(i).getDate() != null){
+                s.add(noticeDetails.get(i).getId(), noticeDetails.get(i).getDate().get(Calendar.MONTH));
+            }
+            else {
+                s.add(noticeDetails.get(i).getId(), -1);
+            }
+        }
+        return s;
+    }
+
+    private ArrayList<Integer> getRestoreDayArrayList() {
+        ArrayList<Integer> s = new ArrayList<>();
+        for (int i = 0; i < noticeDetails.keySet().size(); i++) {
+            if(noticeDetails.get(i).getDate() != null){
+                s.add(noticeDetails.get(i).getId(), noticeDetails.get(i).getDate().get(Calendar.DAY_OF_MONTH));
+            }
+            else {
+                s.add(noticeDetails.get(i).getId(), -1);
+            }
+        }
+        return s;
+    }
+
+    private ArrayList<Integer> getRestoreHourArrayList() {
+        ArrayList<Integer> s = new ArrayList<>();
+        for (int i = 0; i < noticeDetails.keySet().size(); i++) {
+
+            if(noticeDetails.get(i).getDate() != null){
+                s.add(noticeDetails.get(i).getId(), noticeDetails.get(i).getDate().get(Calendar.HOUR));
+            }
+            else {
+                s.add(noticeDetails.get(i).getId(), -1);
+            }
+        }
+        return s;
+    }
+
+    private ArrayList<Integer> getRestoreMinuteArrayList() {
+        ArrayList<Integer> s = new ArrayList<>();
+        for (int i = 0; i < noticeDetails.keySet().size(); i++) {
+            if(noticeDetails.get(i).getDate() != null){
+                s.add(noticeDetails.get(i).getId(), noticeDetails.get(i).getDate().get(Calendar.MINUTE));
+            }
+            else {
+                s.add(noticeDetails.get(i).getId(), -1);
+            }
+        }
+        return s;
+    }
+
+    private ArrayList<Integer> getRestoreWithoutHoursArrayList() {
+        ArrayList<Integer> s = new ArrayList<>();
+        for (int i = 0; i < noticeDetails.keySet().size(); i++) {
+            if(noticeDetails.get(i).getWithoutHours()){
+                s.add(noticeDetails.get(i).getId(), 1);
+            }
+            else {
+                s.add(noticeDetails.get(i).getId(), 0);
+            }
+        }
+        return s;
+    }
+
+    private ArrayList<Integer> getRestoreFinishedArrayList() {
+        ArrayList<Integer> s = new ArrayList<>();
+        for (int i = 0; i < noticeDetails.keySet().size(); i++) {
+            if(noticeDetails.get(i).getFinished()){
+                s.add(noticeDetails.get(i).getId(), 1);
+            }
+            else {
+                s.add(noticeDetails.get(i).getId(), 0);
+            }
+        }
+        return s;
+    }
 
 
 

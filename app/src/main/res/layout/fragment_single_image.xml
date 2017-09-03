@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.ubuntu_master.image_gallery.SingleImageFragment">
+    tools:context="com.example.ubuntu_master.image_gallery.SingleNoticeFragment">
 
 
 
@@ -14,22 +14,11 @@
             android:id="@+id/single_image_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp">
 
-            <ImageView
-                android:id="@+id/single_image"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:scaleType="fitStart"
-                android:adjustViewBounds="true"/>
 
-            <RatingBar
-                android:id="@+id/single_rating_bar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-
-                />
 
             <TextView
                 android:id="@+id/single_view_description"
@@ -37,10 +26,79 @@
                 android:layout_height="match_parent"
                 android:textSize="20dp"/>
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textSize="20dp"
+                android:text="What is to be done?"
+                android:textColor="@color/colorPrimary"
+                android:textStyle="bold"/>
 
+            <EditText
+                android:id="@+id/noticeTitle"
+                android:hint="Enter Task Title Here"
+                android:textColorHint="#D3D3D3"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:backgroundTint="@color/colorPrimaryDark"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textSize="20dp"
+                android:text="More details?"
+                android:textColor="@color/colorPrimary"
+                android:textStyle="bold"/>
+
+            <EditText
+                android:id="@+id/noticeDetails"
+                android:hint="Enter Task Details Here"
+                android:textColorHint="#D3D3D3"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:backgroundTint="@color/colorPrimaryDark"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textSize="20dp"
+                android:text="Due date"
+                android:textColor="@color/colorPrimary"
+                android:textStyle="bold"/>
+
+            <EditText
+                android:id="@+id/noticeCalendar"
+                android:hint="Enter date"
+                android:textColorHint="#D3D3D3"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:backgroundTint="@color/colorPrimaryDark"/>
+
+            <EditText
+                android:id="@+id/noticeCalendarTime"
+                android:hint="Time not set (all day)"
+                android:textColorHint="#D3D3D3"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:backgroundTint="@color/colorPrimaryDark"/>
+
+
+
+
+
+
+            <Button
+                android:id="@+id/saveTaskButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Save Task"
+                android:layout_alignParentBottom="true"
+                android:backgroundTint="@color/colorPrimaryDark"
+                android:textColor="@color/colorWhite"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
         </LinearLayout>
-
     </ScrollView>
 
 </RelativeLayout>
